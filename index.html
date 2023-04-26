@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles.css">
+
+    <link rel="stylesheet" href="https://use.typekit.net/tlu1zgy.css">
+
+    <script defer src="../script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+
+    <title>Knucklebones</title>
+</head>
+
+<body>
+    <div class="win-container hidden">
+        <div class="win-banner">
+            <h1 class="win-msg" id="win-msg">The Lamb Wins!</h1>
+            <div class="win-score">
+                <span id="p1-score">31</span>
+                <span></span>
+                <span id="p2-score">55</span>
+            </div>
+            <button class="play-again">Play Again?</button>
+        </div>
+    </div>
+    <div class="bg game">
+        <nav class="nav">
+            <img src="../assets/gifs/crown/crown.gif">
+            <div class="nav-menu">
+
+            </div>
+        </nav>
+
+        <audio id="music">
+            <source src="../assets/music/knucklebones.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+     
+
+        <player class="top player-active">
+
+
+                <!-- <div class="gif-container">
+
+                    <img src="../assets/gifs/eye_1.gif">
+
+                </div> -->
+
+                <div class="profile">
+                    <img class="profile-img the-lamb" id="profile-img-top"
+                        src="../assets/gifs/lamb/Lamb-knucklebones-idle.gif">
+                        <div class="char-bg"></div>
+                    <div class="name-container">
+                        <img class="name-sym" src="../assets/images/icons/fancytilde.png">
+                        <span class="name" id="name">The Lamb</span>
+                        <img class="name-sym" src="../assets/images/icons/fancytilde.png">
+                    </div>
+                    <div class="player-score"></div>
+                </div>
+
+
+            <div class="board-container no-click">
+
+                <board>
+                    <div class="column" id="0">
+                        <div class="cell">
+                            <div class="dice-bg"></div>
+                        </div>
+                        <div class="cell">
+                            <div class="dice-bg"></div>
+                        </div>
+                        <div class="cell">
+                            <div class="dice-bg"></div>
+                        </div>
+                    </div>
+                    <div class="column" id="1">
+                        <div class="cell">
+                            <div class="dice-bg"></div>
+                        </div>
+                        <div class="cell">
+                            <div class="dice-bg"></div>
+                        </div>
+                        <div class="cell">
+                            <div class="dice-bg"></div>
+                        </div>
+                    </div>
+                    <div class="column" id="2">
+                        <div class="cell">
+                            <div class="dice-bg"></div>
+                        </div>
+                        <div class="cell">
+                            <div class="dice-bg"></div>
+                        </div>
+                        <div class="cell">
+                            <div class="dice-bg"></div>
+                        </div>
+                    </div>
+                </board>
+
+                <div class="col-score-container top">
+                    <div class="col-score"></div>
+                    <div class="col-score"></div>
+                    <div class="col-score"></div>
+                </div>
+
+                <div class="triangle"></div>
+
+            </div>
+
+            <div class="dice-tray">
+
+            </div>
+
+        </player>
+        <player class="bottom">
+
+                <div class="profile">
+                    <img class="profile-img ratau" id="profile-img-bottom"
+                        src="../assets/gifs/ratau/ratau-knucklebones-idle.gif">
+                        <div class="char-bg"></div>
+                    <div class="name-container">
+                        <img class="name-sym" src="../assets/images/icons/fancytilde.png">
+                        <span class="name" id="name">Ratau</span>
+                        <img class="name-sym" src="../assets/images/icons/fancytilde.png">
+                    </div>
+                    <div class="player-score"></div>
+                </div>
+
+                <!-- <div class="gif-container">
+                    <img src="../assets/gifs/eye_1.gif">
+                </div> -->
+
+            <div class="board-container no-click">
+                <div class="col-score-container bottom">
+                    <div class="col-score"></div>
+                    <div class="col-score"></div>
+                    <div class="col-score"></div>
+                </div>
+                <board>
+                    <div class="column" id="3">
+                        <div class="cell">
+                            <div class="dice-bg"></div>
+                        </div>
+                        <div class="cell">
+                            <div class="dice-bg"></div>
+                        </div>
+                        <div class="cell">
+                            <div class="dice-bg"></div>
+                        </div>
+                    </div>
+                    <div class="column" id="4">
+                        <div class="cell">
+                            <div class="dice-bg"></div>
+                        </div>
+                        <div class="cell">
+                            <div class="dice-bg"></div>
+                        </div>
+                        <div class="cell">
+                            <div class="dice-bg"></div>
+                        </div>
+                    </div>
+                    <div class="column" id="5">
+                        <div class="cell">
+                            <div class="dice-bg"></div>
+                        </div>
+                        <div class="cell">
+                            <div class="dice-bg"></div>
+                        </div>
+                        <div class="cell">
+                            <div class="dice-bg"></div>
+                        </div>
+                    </div>
+                </board>
+
+            </div>
+
+            <div class="dice-tray">
+
+            </div>
+
+
+
+        </player>
+    </div>
+</body>
+
+</html>
