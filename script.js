@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
     const eventReset = new Event("reset");
 
     // DELETE ME AFTER YOU'RE DONE TESTING
-    let mydice = [4, 2, 5, 2, 5, 4, 2, 2, 5];
+    let mydice = [5, 2, 5, 2, 5, 5, 5, 5];
     let it = -1;
 
     let gameBoardArray = [
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
     // -------- Functions --------
     function handlePlayGameClick() {
-        window.location.href = window.location.href.replace('menu', 'game');
+        window.location.href = window.location.href.replace('menu', 'index');
     }
 
     class Board {
@@ -219,24 +219,31 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
         //smashes dice in opposing column based on parameter, the dice to be smashed
         smashDice(diceToSmash) {
+            //called on: column clicked
             let smashIndices = [];
-            for (let i = 0; i < this.oppCol.values.length; i++) {
 
+            //traversing array of values of opposing column, where dice will be smashed
+            for (let i = 0; i < this.oppCol.values.length; i++) {
+                //if the value of the dice to be smashed is equal to the value at opp col's array
                 if (this.oppCol.values[i] === diceToSmash.value) {
                     smashIndices.push(i);
                     this.oppCol.cellElements[i].removeChild(this.oppCol.cellElements[i].lastChild);
                     this.renderGlow(false, i);
                     this.oppCol.values[i] = 0;
-                    (turn === 0) ? this.oppCol.openCellIdx-- : this.oppCol.openCellIdx++
+                    if(turn === 0 && this.oppCol.openCellIdx != 0 ) {
+                        this.oppCol.openCellIdx--;
+                    } 
+                    else if(turn === 1 && this.oppCol.openCellIdx != 2){
+                        this.oppCol.openCellIdx++;
+                    }
                 }
             }
             console.log("smash", smashIndices, "\noppcolValues", this.oppCol.values, "this.OpenCellIdx", this.openCellIdx, "\nopp.OpenCellIdx", this.oppCol.openCellIdx);
-            console.log();
             if (smashIndices.length > 0) {
                 this.oppCol.colElement.classList.remove('no-click');
                 this.oppCol.shiftDice()
                 return true;
-            }
+            } 
         }
 
         checkSmash(){
@@ -309,7 +316,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
                     }
 
                 }
-                this.openCellIdx = this.values.indexOf(0);
             }
             else {
                 for (let i = 0; i < this.values.length; i++) {
@@ -331,9 +337,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
                             }
                         }
                     }
-
                 }
-                this.openCellIdx = this.values.indexOf(0);
             }
         }
 
@@ -342,9 +346,8 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
             // console.log("dice",dice.element);
 
-            this.cellElements[this.openCellIdx].appendChild(dice.element);
+            this.cellElements[this.openCellIdx].append(dice.element);
             this.values[this.openCellIdx] = dice.value;
-            // diceTrays[turn].removeChild(dice);
             console.log("pre-inc openCellIdx", this.openCellIdx);
             console.log("turn", turn, "\nthis.colNo", this.colNo, "\nthis.colNum", colNum, "\nthis.openCellIdx", this.openCellIdx);
             if (turn === 1) {
@@ -414,21 +417,20 @@ document.addEventListener('DOMContentLoaded', (e) => {
         }
 
         rollDice() {
-            it++;
-            if (it >= mydice.length) {
+            // it++;
+            // if (it >= mydice.length) {
                 return Math.floor((Math.random() * 5) + 1);
-            }
+            // }
             return mydice[it];
         }
 
         playTurn() {
             console.log("-------------------- NEW TURN --------------------")
+            console.log("Board Cols at start of turn", this.board.columns[1]);
 
             let roll = this.rollDice();
             console.log("roll", roll, "\nturnNo", turnNo);
             diceRoll = new DiceRoll(roll);
-
-            // console.log("diceroll", diceRoll)
 
             diceArray.push(diceRoll);
 
@@ -439,7 +441,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
         handleColumnClick(e) {
             let idx = e.target.id;
 
-            console.log("Player click!", "\nidx", idx, "\ne.target", e.target, "\nBoard", this.board);
+            // console.log("Player click!", "\nidx", idx, "\ne.target", e.target, "\nBoard", this.board);
 
             columnObjClicked = this.board.columns[idx];
 
@@ -456,8 +458,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
             //if smash occurred, also set opposing column's score
             if (smashOccurred) {
                 columnObjClicked.oppCol.setColScore();
-                //check opposing column's dice and shift
-                // columnObjClicked.oppCol.shiftDice();
             }
 
             // console.log("idx",idx,"typeofopenidx",typeof(openCellIndexOfCol), "colObjClicked",columnObjClicked);
@@ -473,6 +473,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
                 }
             }
 
+            console.log("open cell index before next turn",columnObjClicked.openCellIdx)
             this.nextTurn();
             document.dispatchEvent(event);
         }
@@ -488,7 +489,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
         win() {
             //display the win message
-            let winner = (turn === 0) ? (player1.name) : ('Ratau');
+            let winner = (turn === 0) ? ('Ratau') : (player1.name);
             let winMsg = `${winner} Wins!`;
 
             this.renderWin(winMsg);
