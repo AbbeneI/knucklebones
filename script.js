@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
     let turn = 0; //0 or 1
     let turnNo = 1;
     let diceRoll = null;
-    let columnObjClicked = null;
+    let colObjClicked = null;
  
     // ---------------- Events ----------------
     const event = new Event("nextTurn");
@@ -226,9 +226,11 @@ document.addEventListener('DOMContentLoaded', (e) => {
             for (let i = 0; i < this.oppCol.values.length; i++) {
                 //if the value of the dice to be smashed is equal to the value at opp col's array
                 if (this.oppCol.values[i] === diceToSmash.value) {
-                    smashIndices.push(i);
+                    //remove dice HTML element
                     this.oppCol.cellElements[i].removeChild(this.oppCol.cellElements[i].lastChild);
+                    //remove "glow" class if it exists from dice-bg element in the cell
                     this.renderGlow(false, i);
+                    //set the column value
                     this.oppCol.values[i] = 0;
                     if(turn === 0 && this.oppCol.openCellIdx != 0 ) {
                         this.oppCol.openCellIdx--;
@@ -238,7 +240,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
                     }
                 }
             }
-            console.log("smash", smashIndices, "\noppcolValues", this.oppCol.values, "this.OpenCellIdx", this.openCellIdx, "\nopp.OpenCellIdx", this.oppCol.openCellIdx);
+            // console.log("smash", smashIndices, "\noppcolValues", this.oppCol.values, "this.OpenCellIdx", this.openCellIdx, "\nopp.OpenCellIdx", this.oppCol.openCellIdx);
             if (smashIndices.length > 0) {
                 this.oppCol.colElement.classList.remove('no-click');
                 this.oppCol.shiftDice()
@@ -412,8 +414,8 @@ document.addEventListener('DOMContentLoaded', (e) => {
             turnNo = 0;
 
             this.board = new Board();
-            boardContainerEls[0].addEventListener('click', this.handleColumnClick.bind(this), false);
-            boardContainerEls[1].addEventListener('click', this.handleColumnClick.bind(this), false);
+            boardContainerEls[0].addEventListener('click', this.playerMove.bind(this), false);
+            boardContainerEls[1].addEventListener('click', this.playerMove.bind(this), false);
         }
 
         rollDice() {
@@ -426,41 +428,38 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
         playTurn() {
             console.log("-------------------- NEW TURN --------------------")
-            console.log("Board Cols at start of turn", this.board.columns[1]);
 
             let roll = this.rollDice();
             console.log("roll", roll, "\nturnNo", turnNo);
             diceRoll = new DiceRoll(roll);
 
-            diceArray.push(diceRoll);
+            this.renderDiceRoll(diceRoll);
+        }
 
+        renderDiceRoll(diceRoll){
             diceTrays[turn].append(diceRoll.element);
             boardContainerEls[turn].classList.toggle('no-click');
         }
 
-        handleColumnClick(e) {
+        playerMove(e) {
             let idx = e.target.id;
 
             // console.log("Player click!", "\nidx", idx, "\ne.target", e.target, "\nBoard", this.board);
 
-            columnObjClicked = this.board.columns[idx];
-
-            console.log("Board Cols", this.board.columns[idx]);
-
-            // console.log("colobj",columnObjClicked);
-            // columnObjClicked.cellElements
+            colObjClicked = this.board.columns[idx];
+            console.log("colObjClicked", this.board.columns[idx]);
 
             //append the dice to the cell in the column using method
+            colObjClicked.appendDice(diceRoll);
+            let smashOccurred = colObjClicked.smashDice(diceRoll);
+            colObjClicked.setColScore();
 
-            columnObjClicked.appendDice(diceRoll);
-            let smashOccurred = columnObjClicked.smashDice(diceRoll);
-            columnObjClicked.setColScore();
             //if smash occurred, also set opposing column's score
             if (smashOccurred) {
-                columnObjClicked.oppCol.setColScore();
+                colObjClicked.oppCol.setColScore();
             }
 
-            // console.log("idx",idx,"typeofopenidx",typeof(openCellIndexOfCol), "colObjClicked",columnObjClicked);
+            // console.log("idx",idx,"typeofopenidx",typeof(openCellIndexOfCol), "colObjClicked",colObjClicked);
 
             boardContainerEls[turn].classList.toggle('no-click');
 
@@ -473,7 +472,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
                 }
             }
 
-            console.log("open cell index before next turn",columnObjClicked.openCellIdx)
+            console.log("open cell index before next turn",colObjClicked.openCellIdx)
             this.nextTurn();
             document.dispatchEvent(event);
         }
