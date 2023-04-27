@@ -5,13 +5,9 @@ document.addEventListener('DOMContentLoaded', (e) => {
     //Dom Content Loaded
 
     // -------- Dom Element Variables --------
-    const playerImgTop = document.getElementById('profile-img-top');
-    const playerImgBottom = document.getElementById('profile-img-top');
     const nav = document.querySelector('nav');
     const menu = document.querySelector('.nav-menu')
-    const bgGame = document.querySelector('.bg.game');
     const chars = ['The Lamb', 'Ratau'];
-    const playerName = document.querySelectorAll('.name');
     const diceTrays = document.querySelectorAll('.dice-tray');
     const columnEls = document.querySelectorAll('.column');
     const boardContainerEls = document.querySelectorAll('.board-container');
@@ -19,8 +15,11 @@ document.addEventListener('DOMContentLoaded', (e) => {
     const playerEls = document.querySelectorAll('player');
     const scoreCellsCol = document.querySelectorAll('.col-score');
     const scoreCellsPlayer = document.querySelectorAll('.player-score');
-    let bool = true;
 
+    const playerName = document.querySelectorAll('.name');
+    const bgGame = document.querySelector('.bg.game');
+    const playerImgTop = document.getElementById('profile-img-top');
+    const playerImgBottom = document.getElementById('profile-img-top');
 
 
     // ---------------- Constants ----------------
@@ -33,10 +32,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
     const eventNextTurn = new Event("nextTurn");
     const eventWin = new Event("win");
     const eventReset = new Event("reset");
-
-    // DELETE ME AFTER YOU'RE DONE TESTING
-    let mydice = [5, 2, 4, 2, 5, 4];
-    let it = -1;
 
     const initOptions = {
         singleplayer: true,
@@ -63,11 +58,11 @@ document.addEventListener('DOMContentLoaded', (e) => {
         },
         renderChar(str) {
             //Check which character player selected (str) using chars[]
-            for (char of chars) {
+            chars.forEach(char => {
                 if (str === char) {
                     this.setCharVariables(str);
                 }
-            }
+            });
         },
         setCharVariables(str) {
             this.char.charName = str;
@@ -100,7 +95,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
         y: 100,
         duration: 1
     });
-
 
     // -------- Functions --------
     function handlePlayGameClick() {
@@ -173,7 +167,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
             this.cellElements = [null, null, null];
             this.colElement = columnEls[num];
             this.scoreElement = scoreCellsCol[num];
-
             this.board = null;
 
             if (num < 3) {
@@ -193,16 +186,12 @@ document.addEventListener('DOMContentLoaded', (e) => {
             this.values = [0, 0, 0];
 
             //where to place the next dice in values
-            this.openCellIdx = 0;
-
             //we know you're in board 0 if your colNo is 0-2, and 1 if it's 3-5
             if (num < 3) {
                 this.boardNo = 0;
-                this.openCellIdx = this.values.length - 1;
             }
             else {
                 this.boardNo = 1;
-                this.openCellIdx = 0;
             }
         }
 
@@ -218,7 +207,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
                     this.values[i] = 0;
                     //remove "glow" class if it exists from dice-bg element in the cell
                     this.renderRemoveGlow(i);
-                    this.oppCol.openCellIdx--;
                 }
             }
             this.shiftDice();
@@ -277,7 +265,8 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
                             let dice = this.cellElements[j].lastElementChild;
 
-                            this.cellElements[i].append(dice);
+                            this.renderDice(dice, i);
+                            // this.cellElements[i].append(dice);
 
                             //move classes with dice. The .value method is used to avoid pointing to the live classList object,
                             //so the classes variable instead holds a static string copy of the classList
@@ -295,10 +284,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
             let idx = this.values.indexOf(0);
 
             this.values[idx] = dice.value;
-
             this.renderDice(dice, idx);
-            
-            this.openCellIdx = idx;
 
             //if i'm full, add no-click class
             if (this.values.indexOf(0) === -1) {
@@ -457,8 +443,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
     function init() {
         //render player char and name
-
-        player1.renderChar('The Lamb');
+        player1.renderChar('Lamb');
         player1.name = 'The Lamb';
 
         //if player chose singleplayer game

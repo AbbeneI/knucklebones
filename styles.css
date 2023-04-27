@@ -41,40 +41,15 @@
     --color-bro-rgba: rgba(66, 36, 15, 0.3);
 
     /* Font Sizes */
-    --fontsz-name: 20px;
-    --fontsz-score: 20px;
-    --fontsz-player-score: 30px;
+    --fontsz-name: max(1em, 20px);
+    --fontsz-score: max(1em, 20px);
+    --fontsz-player-score: max(1em, 30px);
 
     /* Profile Image Sizes */
     --ratau: min(18vh, 18vw);
     --lamb: min(20vh, 20vw);
 
     --cubic-bezier: cubic-bezier(0.75, 0.22, 0.05, 1);
-
-
-    /* 
---- Font Syntax ---
-Lapture Regular
-font-family: "jaf-lapture", serif;
-font-weight: 400;
-font-style: normal;
-
-Lapture Italic
-font-family: "jaf-lapture", serif;
-font-weight: 400;
-font-style: italic;
-
-Lapture Bold
-font-family: "jaf-lapture", serif;
-font-weight: 700;
-font-style: normal;
-
-Lapture Bold Italic
-font-family: "jaf-lapture", serif;
-font-weight: 700;
-font-style: italic; 
-*/
-
 }
 
 @keyframes playerTurn {
