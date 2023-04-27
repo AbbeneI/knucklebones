@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
         setCharVariables(str) {
             this.char.charName = str;
             for (property in this.char.charGifPath) {
-                let gifPath = `../assets/gifs/${str}/${str}-knucklebones-${property}.gif`;
+                let gifPath = `assets/gifs/${str}/${str}-knucklebones-${property}.gif`;
                 this.char.charGifPath[property] = gifPath;
             }
         }
@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
         constructor(num) {
             this.element = document.createElement('img');
             this.value = num;
-            this.element.src = `../assets/images/dice/dice-0${num}.svg`;
+            this.element.src = `assets/images/dice/dice-0${num}.svg`;
             this.element.classList = "dice";
         }
     }
@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
         constructor(num) {
             this.element = document.createElement('img');
             this.value = num;
-            this.element.src = `../assets/images/dice/dice-0${num}.svg`;
+            this.element.src = `assets/images/dice/dice-0${num}.svg`;
             this.element.classList = "dice";
             this.element.id = "dice-roll";
         }
