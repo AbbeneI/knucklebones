@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
     const playerImgTop = document.getElementById('profile-img-top');
     const playerImgBottom = document.getElementById('profile-img-top');
 
-
     // ---------------- Constants ----------------
     let turn = 0; //0 or 1
     let turnNo = 0;
