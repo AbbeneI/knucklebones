@@ -21,19 +21,18 @@ document.addEventListener('DOMContentLoaded', (e) => {
     const scoreCellsPlayer = document.querySelectorAll('.player-score');
 
     // ---------------- Constants ----------------
-    let diceArray = [];
     let turn = 0; //0 or 1
     let turnNo = 1;
     let diceRoll = null;
     let colObjClicked = null;
- 
+
     // ---------------- Events ----------------
     const eventNextTurn = new Event("nextTurn");
     const eventWin = new Event("win");
     const eventReset = new Event("reset");
 
     // DELETE ME AFTER YOU'RE DONE TESTING
-    let mydice = [5, 5,5,5];
+    let mydice = [5, 2, 4, 2, 5, 4];
     let it = -1;
 
     const initOptions = {
@@ -136,25 +135,18 @@ document.addEventListener('DOMContentLoaded', (e) => {
             }
         }
 
-        setPlayerScore(opp) {
-            let currTurn;
-            //if opp is true, add up opp board's score
-            if (opp) {
-                (turn === 0) ? (currTurn = 1) : (currTurn = 0)
-            }
-            else {
-                currTurn = turn;
-            }
-
-            let start = currTurn * 3;
-            this.playerScore[currTurn] = 0;
+        setPlayerScore(boardNo) {
+       
+            let start = boardNo * 3;
+            this.playerScore[boardNo] = 0;
 
             for (let i = start; i < start + 3; i++) {
-                this.playerScore[currTurn] += this.columns[i].colScore;
+                this.playerScore[boardNo] += this.columns[i].colScore;
             }
             //render results
-            scoreCellsPlayer[currTurn].textContent = this.playerScore[currTurn];
+            scoreCellsPlayer[boardNo].textContent = this.playerScore[boardNo];
         }
+
         checkWin() {
             //this function is called after a player makes a move, but before the turn value switches to start a next player's turn
             let currTurn = turn;
@@ -180,7 +172,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
             this.board = null;
 
-            if(num < 3){
+            if (num < 3) {
                 let j = 0;
                 for (let i = 2; i > -1; i--) {
                     this.cellElements[j] = cellEls[i + (3 * num)];
@@ -213,40 +205,30 @@ document.addEventListener('DOMContentLoaded', (e) => {
         //smashes dice in opposing column based on parameter, the dice to be smashed
         smashDice(diceToSmash) {
             //called on: column clicked
-            let smashIndices = [];
-
             //traversing array of values of opposing column, where dice will be smashed
-            for (let i = 0; i < this.oppCol.values.length; i++) {
-                //if the value of the dice to be smashed is equal to the value at opp col's array
-                if (this.oppCol.values[i] === diceToSmash.value) {
+            for (let i = 0; i < this.values.length; i++) {
+                if (this.values[i] === diceToSmash.value) {
                     //remove dice HTML element
-                    this.oppCol.cellElements[i].removeChild(this.oppCol.cellElements[i].lastChild);
-                    //remove "glow" class if it exists from dice-bg element in the cell
-                    this.renderGlow(false, i);
+                    this.cellElements[i].removeChild(this.cellElements[i].lastChild);
                     //set the column value
-                    this.oppCol.values[i] = 0;
-                     
+                    this.values[i] = 0;
+                    //remove "glow" class if it exists from dice-bg element in the cell
+                    this.renderRemoveGlow(i);
                     this.oppCol.openCellIdx--;
-                    
-                  
                 }
             }
-            // console.log("smash", smashIndices, "\noppcolValues", this.oppCol.values, "this.OpenCellIdx", this.openCellIdx, "\nopp.OpenCellIdx", this.oppCol.openCellIdx);
-            if (smashIndices.length > 0) {
-                this.oppCol.colElement.classList.remove('no-click');
-                this.oppCol.shiftDice()
-                return true;
-            } 
+            this.shiftDice();
+            //i'm no longer full, so remove no-click if it exists
+            this.colElement.classList.remove('no-click')
         }
 
-        checkSmash(){
+        checkSmash() {
             let smash = false;
             this.values.forEach(value => {
-                if(this.oppCol.values.includes(value) && value != 0){
-                    // console.log("check smash opp col's values: ",this.oppCol.values,"\nblergh",this.oppCol.values.includes(value));
+                if (this.oppCol.values.includes(value) && value != 0) {
                     smash = true;
                 }
-            }) 
+            })
             return smash;
         }
 
@@ -260,83 +242,45 @@ document.addEventListener('DOMContentLoaded', (e) => {
                 for (let j = i + 1; j < this.values.length; j++) {
                     if (this.values[i] === this.values[j] && this.values[i] !== 0) {
                         this.colScore += this.values[i] * 2;
-                        this.renderGlow(true, i, j);
+                        this.renderGlow(i, j);
                     }
                 }
                 this.colScore += this.values[i];
             }
-
             this.scoreElement.innerText = this.colScore;
-            this.board.setPlayerScore(false);
+            this.board.setPlayerScore(this.boardNo);
         }
 
-        renderGlow(target, ...indices) {
-            console.log("indices", indices);
-            //if target is true, toggle glow on own cell elements
-            //if target is false, toggle glow on opp col's cell elements
-            if (target) {
-                indices.forEach(idx => {
-                    this.cellElements[idx].classList.add('glow');
-                });
-            }
-            else {
-                indices.forEach(idx => {
-                    this.oppCol.cellElements[idx].classList.remove('glow');
+        renderGlow(...indices) {
+            indices.forEach(idx => {
+                this.cellElements[idx].classList.add('glow');
+            });
+        }
 
-                });
-            }
+        renderRemoveGlow(...indices) {
+            indices.forEach(idx => {
+                this.cellElements[idx].classList.remove('glow');
+            });
         }
 
         shiftDice() {
-            console.log("--- SHIFT ---");
-            
-            if (this.boardNo === 0) {
+            for (let i = 0; i < this.values.length; i++) {
+                if (this.values[i] === 0) {
+                    for (let j = i + 1; j < this.values.length; j++) {
+                        if (this.values[j] != 0) {
+                            this.values[i] = this.values[j];
+                            this.values[j] = 0;
 
-                for (let i = 2; i > 0; i--) {
+                            let dice = this.cellElements[j].lastElementChild;
 
-                    if (this.values[i] === 0) {
+                            this.cellElements[i].append(dice);
 
-                        for (let j = i - 1; j >= 0; j--) {
-
-                            if (this.values[j] != 0) {
-                                //change values
-                                this.values[i] = this.values[j];
-                                this.values[j] = 0;
-
-                                //render HTML dice element by appending its reference to new location
-                                let dice = this.cellElements[j].lastElementChild;
-                                this.cellElements[i].append(dice);
-
-                                //move classes with dice. The .value method is used to avoid pointing to the live classList object,
-                                //so the classes variable instead holds a static string copy of the classList
-                                let classes = this.cellElements[i].classList.value;
-                                this.cellElements[i].className = this.cellElements[j].classList.value;
-                                this.cellElements[j].className = classes;
-                                break;
-                            }
-
-                        }
-                    }
-                }
-            }
-            else {
-                for (let i = 0; i < this.values.length; i++) {
-                    if (this.values[i] === 0) {
-                        for (let j = i + 1; j < this.values.length; j++) {
-                            if (this.values[j] != 0) {
-                                this.values[i] = this.values[j];
-                                this.values[j] = 0;
-
-                                let dice = this.cellElements[j].lastElementChild;
-
-                                this.cellElements[i].append(dice);
-                                //move classes with dice. The .value method is used to avoid pointing to the live classList object,
-                                //so the classes variable instead holds a static string copy of the classList
-                                let classes = this.cellElements[i].classList.value;
-                                this.cellElements[i].className = this.cellElements[j].classList.value;
-                                this.cellElements[j].className = classes;
-                                break;
-                            }
+                            //move classes with dice. The .value method is used to avoid pointing to the live classList object,
+                            //so the classes variable instead holds a static string copy of the classList
+                            let classes = this.cellElements[i].classList.value;
+                            this.cellElements[i].className = this.cellElements[j].classList.value;
+                            this.cellElements[j].className = classes;
+                            break;
                         }
                     }
                 }
@@ -350,47 +294,10 @@ document.addEventListener('DOMContentLoaded', (e) => {
             this.cellElements[idx].append(dice.element);
             this.openCellIdx = idx;
 
-            console.log("idx", idx, "cell element to append into",this.cellElements[idx],"dice.element",dice.element)
-            // let colNum = 0;
-
-            // // console.log("dice",dice.element);
-
-            // this.cellElements[this.openCellIdx].append(dice.element);
-            // this.values[this.openCellIdx] = dice.value;
-            // // console.log("pre-inc openCellIdx", this.openCellIdx);
-            // // console.log("turn", turn, "\nthis.colNo", this.colNo, "\nthis.colNum", colNum, "\nthis.openCellIdx", this.openCellIdx);
-            // if (turn === 1) {
-            //     colNum = this.colNo - 3;
-            // }
-
-            // if (this.boardNo === 0 && 0 <= this.openCellIdx <= 2) {
-
-            //     if (this.openCellIdx === 0) {
-            //         this.full = true;
-            //         this.colElement.classList.add('no-click')
-            //     }
-            //     else {
-            //         this.full = false;
-            //     }
-            //     this.openCellIdx--;
-            // }
-            // else if (this.boardNo === 1 && 0 < this.openCellIdx <= 2) {
-            //     if (this.openCellIdx === 2) {
-            //         this.full = true;
-            //         this.colElement.classList.add('no-click')
-            //     }
-            //     else {
-            //         this.full = false;
-            //     }
-            //     this.openCellIdx++;
-            // }
-
-            // if (this.openCellIdx > 2)
-            //     this.openCellIdx = 2;
-            // else if (this.openCellIdx < 0)
-            //     this.openCellIdx = 0;
-
-            // console.log("inc-ed openCellIdx", this.openCellIdx);
+            //if i'm full, add no-click class
+            if (this.values.indexOf(0) === -1) {
+                this.colElement.classList.add('no-click');
+            }
         }
     }
 
@@ -424,24 +331,21 @@ document.addEventListener('DOMContentLoaded', (e) => {
         }
 
         rollDice() {
-            it++;
-            if (it >= mydice.length) {
-                return Math.floor((Math.random() * 5) + 1);
-            }
+            // it++;
+            // if (it >= mydice.length) {
+            return Math.floor((Math.random() * 5) + 1);
+            // }
             return mydice[it];
         }
 
         playTurn() {
-            console.log("-------------------- NEW TURN --------------------")
-
             let roll = this.rollDice();
-            console.log("roll", roll, "\nturnNo", turnNo);
             diceRoll = new DiceRoll(roll);
 
             this.renderDiceRoll(diceRoll);
         }
 
-        renderDiceRoll(diceRoll){
+        renderDiceRoll(diceRoll) {
             diceTrays[turn].append(diceRoll.element);
             boardContainerEls[turn].classList.toggle('no-click');
         }
@@ -449,9 +353,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
         playerMove(e) {
             let idx = e.target.id;
 
-            // console.log("Player click!", "\nidx", idx, "\ne.target", e.target, "\nBoard", this.board);
             colObjClicked = this.board.columns[idx];
-            console.log("colObjClicked", this.board.columns[idx]);
 
             //append the dice to the cell in the column using method
             colObjClicked.appendDice(diceRoll);
@@ -459,7 +361,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
             colObjClicked.setScore();
 
             //check if opposing dice can be smashed
-            if(colObjClicked.oppCol.checkSmash()){
+            if (colObjClicked.oppCol.checkSmash()) {
                 //if so, call smashDice
                 colObjClicked.oppCol.smashDice(diceRoll);
 
@@ -467,7 +369,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
                 colObjClicked.oppCol.setScore();
             }
 
-            // console.log("idx",idx,"typeofopenidx",typeof(openCellIndexOfCol), "colObjClicked",colObjClicked);
             boardContainerEls[turn].classList.toggle('no-click');
 
             //check if someone has won
@@ -477,8 +378,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
                     return;
                 }
             }
-
-            //if not, next turn
+            //if no win, next turn
             this.nextTurn();
         }
 
@@ -490,21 +390,27 @@ document.addEventListener('DOMContentLoaded', (e) => {
             document.dispatchEvent(eventNextTurn);
         }
 
-        renderPlayerBG(){
+        renderPlayerBG() {
             playerEls.forEach(el => {
-                console.log("el", el);
                 el.classList.toggle('player-active');
             });
         }
 
         win() {
             //display the win message
-            let winner = (turn === 0) ? ('Ratau') : (player1.name);
-            let winMsg = `${winner} Wins!`;
-
+            let winMsg = '';
+            if (this.board.playerScore[0] > this.board.playerScore[1]) {
+                winMsg = `${player1.name} Wins!`;
+            }
+            else if (this.board.playerScore[0] === this.board.playerScore[1]) {
+                winMsg = "It's a Tie!";
+            }
+            else {
+                winMsg = `Ratau Wins!`;
+            }
             this.renderWin(winMsg);
-
         }
+
         renderWin(winMsg) {
             //toggle HTML classes
 
@@ -540,7 +446,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
                 game.win();
             });
 
-
             function resetGame() {
                 game.board.columns.forEach(col => {
                     delete this;
@@ -559,5 +464,4 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
     init();
 
-   
 });
