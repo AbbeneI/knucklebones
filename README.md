@@ -16,13 +16,19 @@ Cult of the Lamb is a video game developed by indie developer Massive Monster an
 
 ## Section 2: Screenshot(s):
 
+#### Game Screenshots  
+![Game Start Screen](assets/images/screenshots/knucklebones_screenshot_start.png)
+
+![Mid-Game Screen](assets/images/screenshots/knucklebones_screenshot_mid.png)  
+
+![Win Game Screen](assets/images/screenshots/knucklebones_screenshot_win.png)  
+  
+
 #### Mobile-First Lo-fi Mockup  
-![Mobile-First Lo-Fi Mockup](prework/Lo-Fi_Mobile.jpg)
+![Mobile-First Lo-Fi Mockup](assets/images/wireframes//Lo-Fi_Mobile.jpg)
 
 #### Wireframe of Knucklebones UI  
-![Wireframe of Knucklebones UI](prework/Knucklebones_Wireframe.jpg)
-
-
+![Wireframe of Knucklebones UI](assets/images/wireframes/Knucklebones_Wireframe.jpg)
 
 ## Section 3: Technologies Used 
 
@@ -35,14 +41,23 @@ Cult of the Lamb is a video game developed by indie developer Massive Monster an
 ## Section 4: Getting Started  
 
 In this section include the link to your deployed game and any instructions you deem important.
+https://abbenei.github.io/knucklebones/
+
+#### How to Play
+ 1. In order to play, hover over the board and choose which column you'd like to place a dice into. Click to place the dice. 
+ 2. Your score will increase by the amount on the dice that you placed. To increase your score further, place dice of the same number in the same column.
+ 3. In order to reduce your opponent's score, place your dice in the column opposite theirs. If dice in your opponent's column contains the same number as your dice, the dice in your opponent's column will be removed from the board and their score will decrease. 
+ 4. Fill up your board in order to end the game. If your score is higher, you win! 
+
 
 
 ## Section 5: Next Steps
 
 Planned future enhancements (icebox items).
-
-Frequent commits (at least 1 every day) dating back to the very beginning of the project. Never delete you repo to "start over". Commit messages should be in the present tense, e.g., "Style game board" instead of "Styled game board". Be sure to create the repo on your personal GitHub account and ensure that it is "public".
-
+ - Adding a menu page (with start game, how to play buttons) that can be used to start the game
+ - Menu that allows user to see how to play and exit to main menu
+ - Animations on dice removal and shift
+ - A CPU that plays against the user (singleplayer mode)
 
 ## Pseudocode
 
@@ -105,8 +120,6 @@ runGame()
  - rolls the dice for you automatically
  - dice is rendered to the UI in the dice-tray element
  - toggles the column's HTML class that enables pointer-events (so user can click on column)
- - 
 
- - you choose which column to place it in
 
 

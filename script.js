@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
                             let dice = this.cellElements[j].lastElementChild;
 
-                            this.renderDice(dice, i);
+                            this.renderAppendDice(dice, i);
                             // this.cellElements[i].append(dice);
 
                             //move classes with dice. The .value method is used to avoid pointing to the live classList object,
@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
             let idx = this.values.indexOf(0);
 
             this.values[idx] = dice.value;
-            this.renderDice(dice, idx);
+            this.renderAppendDice(dice, idx);
 
             //if i'm full, add no-click class
             if (this.values.indexOf(0) === -1) {
@@ -292,15 +292,15 @@ document.addEventListener('DOMContentLoaded', (e) => {
             }
         }
 
-        renderDice(dice, idx) {
+        renderAppendDice(dice, idx) {
             //using GSAP to animate while appending
             const state = Flip.getState(dice.element);
 
             this.cellElements[idx].append(dice.element);
 
             Flip.from(state, {
-                duration: 1, 
-                ease: "power4.inOut"    
+                duration: 1,
+                ease: "power4.inOut"
             });
         }
     }
@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
             this.value = num;
             this.element.src = `assets/images/dice/dice-0${num}.svg`;
             this.element.classList = "dice";
-            this[data-flip-id] = "dice";
+            this[data - flip - id] = "dice";
         }
     }
     class DiceRoll {
@@ -331,8 +331,8 @@ document.addEventListener('DOMContentLoaded', (e) => {
             turnNo = 0;
 
             this.board = new Board();
-            boardContainerEls[0].addEventListener('click', this.playerMove.bind(this), false);
-            boardContainerEls[1].addEventListener('click', this.playerMove.bind(this), false);
+            boardContainerEls[0].addEventListener('click', this.handlePlayerMove.bind(this), false);
+            boardContainerEls[1].addEventListener('click', this.handlePlayerMove.bind(this), false);
         }
 
         resetGame() {
@@ -353,17 +353,19 @@ document.addEventListener('DOMContentLoaded', (e) => {
             let roll = this.rollDice();
             diceRoll = new DiceRoll(roll);
 
-            this.renderDiceRoll(diceRoll);
+            this.renderAppendDiceRoll(diceRoll);
         }
 
-        renderDiceRoll(diceRoll) {
+        renderAppendDiceRoll(diceRoll) {
             diceTrays[turn].append(diceRoll.element);
             boardContainerEls[turn].classList.toggle('no-click');
         }
 
-        playerMove(e) {
+        handlePlayerMove(e) {
+            if (!e.target.className.includes('column')) {
+                return;
+            }
             let idx = e.target.id;
-
 
             colObjClicked = this.board.columns[idx];
             //append the dice to the cell in the column using method
@@ -458,20 +460,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
             document.addEventListener("win", (e) => {
                 game.win();
             });
-
-            function resetGame() {
-                game.board.columns.forEach(col => {
-                    delete this;
-                })
-                delete game.board;
-                delete game;
-
-                init();
-            }
-        }
-
-        else {
-            // runMultiPlayerGame();
         }
     }
 
