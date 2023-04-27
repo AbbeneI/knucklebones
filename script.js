@@ -340,11 +340,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
         }
 
         rollDice() {
-            // it++;
-            // if (it >= mydice.length) {
             return Math.floor((Math.random() * 5) + 1);
-            // }
-            // return mydice[it];
         }
 
         playTurn() {
