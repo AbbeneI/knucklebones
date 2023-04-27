@@ -266,7 +266,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
                             let dice = this.cellElements[j].lastElementChild;
 
                             this.renderAppendDice(dice, i);
-                            // this.cellElements[i].append(dice);
 
                             //move classes with dice. The .value method is used to avoid pointing to the live classList object,
                             //so the classes variable instead holds a static string copy of the classList
@@ -338,7 +337,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
         resetGame() {
             let deleteBoard = this.board;
             this.board = new Board();
-            // delete deleteBoard;
         }
 
         rollDice() {
@@ -365,6 +363,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
             if (!e.target.className.includes('column')) {
                 return;
             }
+           
             let idx = e.target.id;
 
             colObjClicked = this.board.columns[idx];

@@ -22,7 +22,7 @@ Cult of the Lamb is a video game developed by indie developer Massive Monster an
 ![Mid-Game Screen](assets/images/screenshots/knucklebones_screenshot_mid.png)  
 
 ![Win Game Screen](assets/images/screenshots/knucklebones_screenshot_win.png)  
-  
+
 
 #### Mobile-First Lo-fi Mockup  
 ![Mobile-First Lo-Fi Mockup](assets/images/wireframes//Lo-Fi_Mobile.jpg)
@@ -37,7 +37,6 @@ Cult of the Lamb is a video game developed by indie developer Massive Monster an
  - Javascript
  - Green Sock (GSAP)
 
-
 ## Section 4: Getting Started  
 
 In this section include the link to your deployed game and any instructions you deem important.
@@ -48,7 +47,6 @@ https://abbenei.github.io/knucklebones/
  2. Your score will increase by the amount on the dice that you placed. To increase your score further, place dice of the same number in the same column.
  3. In order to reduce your opponent's score, place your dice in the column opposite theirs. If dice in your opponent's column contains the same number as your dice, the dice in your opponent's column will be removed from the board and their score will decrease. 
  4. Fill up your board in order to end the game. If your score is higher, you win! 
-
 
 
 ## Section 5: Next Steps
