@@ -130,6 +130,15 @@ font-style: italic;
     }
 }
 
+@keyframes diceIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 
 body {
     margin: 0;
@@ -293,11 +302,15 @@ body {
     width: var(--dice);
 
     z-index: 2;
-    pointer-events: none;
+
+    /* animation-name: diceIn;
+    animation-timing-function: ease;
+    animation-duration: 3s;
+    animation-iteration-count: 1; */
 }
 
 .dice-bg {
-    pointer-events: none;
+
     position: absolute;
     z-index: 1;
 
@@ -717,7 +730,7 @@ a {
 .win-score span {
     display: inline-block;
     padding: 0 var(--cell-gap);
-    font-size: var(--fontsz-name);
+    font-size: var(--fontsz-player-score);
 }
 
 .win-score span:nth-child(2) {
@@ -730,7 +743,7 @@ a {
 
 .play-again {
     height: fit-content;
-    margin-top: min(2vh, 2vw);
+    margin-top: min(1vh, 1vw);
     padding: var(--game-padding);
     border: 1px solid white;
     background: black;

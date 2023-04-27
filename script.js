@@ -19,10 +19,13 @@ document.addEventListener('DOMContentLoaded', (e) => {
     const playerEls = document.querySelectorAll('player');
     const scoreCellsCol = document.querySelectorAll('.col-score');
     const scoreCellsPlayer = document.querySelectorAll('.player-score');
+    let bool = true;
+
+
 
     // ---------------- Constants ----------------
     let turn = 0; //0 or 1
-    let turnNo = 1;
+    let turnNo = 0;
     let diceRoll = null;
     let colObjClicked = null;
 
@@ -90,6 +93,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
     // -------- GSAP --------
     const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+    gsap.registerPlugin(Flip);
 
     tl.from(".bg.game", {
         opacity: 0,
@@ -136,7 +140,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
         }
 
         setPlayerScore(boardNo) {
-       
+
             let start = boardNo * 3;
             this.playerScore[boardNo] = 0;
 
@@ -291,13 +295,27 @@ document.addEventListener('DOMContentLoaded', (e) => {
             let idx = this.values.indexOf(0);
 
             this.values[idx] = dice.value;
-            this.cellElements[idx].append(dice.element);
+
+            this.renderDice(dice, idx);
+            
             this.openCellIdx = idx;
 
             //if i'm full, add no-click class
             if (this.values.indexOf(0) === -1) {
                 this.colElement.classList.add('no-click');
             }
+        }
+
+        renderDice(dice, idx) {
+            //using GSAP to animate while appending
+            const state = Flip.getState(dice.element);
+
+            this.cellElements[idx].append(dice.element);
+
+            Flip.from(state, {
+                duration: 1, 
+                ease: "power4.inOut"    
+            });
         }
     }
 
@@ -307,6 +325,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
             this.value = num;
             this.element.src = `assets/images/dice/dice-0${num}.svg`;
             this.element.classList = "dice";
+            this[data-flip-id] = "dice";
         }
     }
     class DiceRoll {
@@ -330,12 +349,18 @@ document.addEventListener('DOMContentLoaded', (e) => {
             boardContainerEls[1].addEventListener('click', this.playerMove.bind(this), false);
         }
 
+        resetGame() {
+            let deleteBoard = this.board;
+            this.board = new Board();
+            // delete deleteBoard;
+        }
+
         rollDice() {
             // it++;
             // if (it >= mydice.length) {
             return Math.floor((Math.random() * 5) + 1);
             // }
-            return mydice[it];
+            // return mydice[it];
         }
 
         playTurn() {
@@ -353,8 +378,8 @@ document.addEventListener('DOMContentLoaded', (e) => {
         playerMove(e) {
             let idx = e.target.id;
 
-            colObjClicked = this.board.columns[idx];
 
+            colObjClicked = this.board.columns[idx];
             //append the dice to the cell in the column using method
             colObjClicked.appendDice(diceRoll);
             //multiply dice and set score
@@ -372,7 +397,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
             boardContainerEls[turn].classList.toggle('no-click');
 
             //check if someone has won
-            if (turnNo >= 18) {
+            if (turnNo >= 16) {
                 if (this.board.checkWin()) {
                     document.dispatchEvent(eventWin);
                     return;
@@ -398,29 +423,33 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
         win() {
             //display the win message
-            let winMsg = '';
+            let winMsg = '', winScore, loseScore;
+
             if (this.board.playerScore[0] > this.board.playerScore[1]) {
                 winMsg = `${player1.name} Wins!`;
+                winScore = this.board.playerScore[0];
+                loseScore = this.board.playerScore[1];
             }
             else if (this.board.playerScore[0] === this.board.playerScore[1]) {
                 winMsg = "It's a Tie!";
+                winScore = this.board.playerScore[0];
+                loseScore = this.board.playerScore[1];
             }
             else {
                 winMsg = `Ratau Wins!`;
+                winScore = this.board.playerScore[1];
+                loseScore = this.board.playerScore[0];
             }
-            this.renderWin(winMsg);
+            this.renderWin(winMsg, winScore, loseScore);
         }
 
-        renderWin(winMsg) {
+        renderWin(winMsg, winScore, loseScore) {
             //toggle HTML classes
-
-            let p1score = this.board.playerScore[0];
-            let p2score = this.board.playerScore[1];
-            const winContainer = document.querySelector('.win-container').classList.remove('hidden');
+            document.querySelector('.win-container').classList.remove('hidden');
             document.getElementById('win-msg').innerText = winMsg;
-            document.getElementById('p1-score').innerText = p1score;
-            document.getElementById('p2-score').innerText = p2score;
-            document.querySelector('.play-again').addEventListener(click, (e) => {
+            document.getElementById('p1-score').innerText = winScore;
+            document.getElementById('p2-score').innerText = loseScore;
+            document.querySelector('.play-again').addEventListener("click", (e) => {
                 document.dispatchEvent('reset');
             });
         }
@@ -431,7 +460,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
         player1.renderChar('The Lamb');
         player1.name = 'The Lamb';
-
 
         //if player chose singleplayer game
         if (initOptions.singleplayer) {
