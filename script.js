@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
     //Dom Content Loaded
 
     // -------- Dom Element Variables --------
-    const nav = document.querySelector('nav');
-    const menu = document.querySelector('.nav-menu')
     const chars = ['The Lamb', 'Ratau'];
     const diceTrays = document.querySelectorAll('.dice-tray');
     const columnEls = document.querySelectorAll('.column');
@@ -15,12 +13,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
     const playerEls = document.querySelectorAll('player');
     const scoreCellsCol = document.querySelectorAll('.col-score');
     const scoreCellsPlayer = document.querySelectorAll('.player-score');
-
-    const playerName = document.querySelectorAll('.name');
-    const bgGame = document.querySelector('.bg.game');
-    const playerImgTop = document.getElementById('profile-img-top');
-    const playerImgBottom = document.getElementById('profile-img-top');
-
 
     // ---------------- Constants ----------------
     let turn = 0; //0 or 1
@@ -31,13 +23,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
     // ---------------- Events ----------------
     const eventNextTurn = new Event("nextTurn");
     const eventWin = new Event("win");
-    const eventReset = new Event("reset");
-
-    const initOptions = {
-        singleplayer: true,
-        playerName: '',
-        playerChar: ''
-    }
 
     const player1 = {
         name: '',
@@ -73,19 +58,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
         }
     }
 
-    // -------- Event Listeners --------
-    nav.addEventListener('click', e => {
-        menu.classList.toggle('menu-open');
-        menu.classList.toggle('nav-menu');
-
-    });
-
-    //If we are on menu screen
-    if (window.location.href.includes('menu')) {
-        const btnPlayGame = document.getElementById('play-game');
-        btnPlayGame.addEventListener('click', handlePlayGameClick);
-    }
-
     // -------- GSAP --------
     const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
     gsap.registerPlugin(Flip);
@@ -96,11 +68,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
         duration: 1
     });
 
-    // -------- Functions --------
-    function handlePlayGameClick() {
-        window.location.href = window.location.href.replace('menu', 'index');
-    }
-
+    // -------- Classes --------
     class Board {
         constructor() {
             this.columns = [null, null, null, null, null, null];
@@ -304,15 +272,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
         }
     }
 
-    class Dice {
-        constructor(num) {
-            this.element = document.createElement('img');
-            this.value = num;
-            this.element.src = `assets/images/dice/dice-0${num}.svg`;
-            this.element.classList = "dice";
-            this[data - flip - id] = "dice";
-        }
-    }
     class DiceRoll {
         constructor(num) {
             this.element = document.createElement('img');
@@ -359,7 +318,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
             if (!e.target.className.includes('column')) {
                 return;
             }
-           
+
             let idx = e.target.id;
 
             colObjClicked = this.board.columns[idx];
@@ -438,24 +397,23 @@ document.addEventListener('DOMContentLoaded', (e) => {
         }
     }
 
+    // -------- Functions --------
     function init() {
         //render player char and name
         player1.renderChar('Lamb');
         player1.name = 'The Lamb';
 
         //if player chose singleplayer game
-        if (initOptions.singleplayer) {
-            const game = new KnucklebonesGame(1);
+        const game = new KnucklebonesGame(1);
 
+        game.playTurn();
+
+        document.addEventListener("nextTurn", (e) => {
             game.playTurn();
-
-            document.addEventListener("nextTurn", (e) => {
-                game.playTurn();
-            });
-            document.addEventListener("win", (e) => {
-                game.win();
-            });
-        }
+        });
+        document.addEventListener("win", (e) => {
+            game.win();
+        });
     }
 
     init();
