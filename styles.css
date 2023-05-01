@@ -14,7 +14,9 @@
     --game-padding: min(2vh, 2vw);
     --game-gap: min(4vh, 4vw);
 
-    --start-padding: min(10vh, 10vw);
+    --start-padding-v: min(10vh, 10vw);
+    --start-padding-h: min(16vh, 16vw);
+
 
     --player-dice-profile-width: min(30vh, 30vw);
 
@@ -33,8 +35,8 @@
     --nav: min(5vh, 5vw);
 
     /* Colors */
-    --color-bg: #FFF4E1;
-    --color-red: #CC2A2F;
+    --color-bg: #FFF2DA;
+    --color-red: #FE1F02;
     --color-text: #42240F;
     --color-blk: #000;
     --color-bro: #42240F;
@@ -393,7 +395,7 @@ board {
     border-radius: 50%;
     height: 0;
     width: 0;
-    background: rgba(218, 165, 32, 0.1);
+    background: rgba(218, 165, 32, 0.3);
     opacity: 0;
     transition: opacity 0.3s ease, height 0.3s ease, width 0.3s ease;
 }
@@ -579,9 +581,18 @@ player.top .profile .profile-img {
 }
 
 /* ------------------- Menu Styling ------------------------- */
+.start {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(50, 1fr);
+
+    padding: var(--start-padding-v) var(--start-padding-h);
+}
+
 .start-content {
-    grid-row: 19/41;
-    grid-column: 1/8;
+    /* grid-row: 19/41; */
+    grid-column: 1/1;
 
     display: flex;
     flex-direction: column;
@@ -605,13 +616,14 @@ player.top .profile .profile-img {
 }
 
 button {
-    background: #000;
+    background: rgba(0,0,0,0);
     height: var(--button-h);
     width: var(--button-w);
 
     border: 0;
 
-    color: #fff;
+    color: #000;
+    font-weight: 700;
 
     transition: box-shadow 0.3s ease;
 }
@@ -629,21 +641,14 @@ a {
     font-family: 'Rowan & Royal';
     font-style: normal;
     font-weight: 400;
-    font-size: 7.5rem;
+    font-size:4rem;
     line-height: 123px;
 
     color: var(--color-red);
-    letter-spacing: 0.2em;
+    /* letter-spacing: 0.2em; */
 }
 
-.start {
-    display: grid;
 
-    grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: repeat(50, 1fr);
-
-    padding: var(--start-padding);
-}
 
 .button-container {
     width: 100%;
@@ -654,6 +659,7 @@ a {
     justify-content: space-around;
     align-items: center;
 
+    grid-row: 25/50;
 }
 
 .play-again {
@@ -669,3 +675,16 @@ a {
     background: white;
     border: 1px solid black;
 }
+
+#myVideo {
+    position: absolute;
+    z-index: -1;
+    right: 0;
+    bottom: 0;
+
+    width: max(100vw, 100vh);
+  }
+
+  .bg.start {
+    background: rgba(0,0,0,0);
+  }

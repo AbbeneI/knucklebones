@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
     // -------- Functions --------
     function handlePlayGameClick() {
-        window.location.href = window.location.href.replace('menu', 'index');
+        window.location.href = window.location.href.replace('views/menu', 'index');
     }
 
     class Board {
